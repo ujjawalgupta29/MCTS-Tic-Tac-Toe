@@ -186,9 +186,51 @@ class MCTS(onbject):
             child_node_id = childs[rand_idx[0]]
 
         return child_node_id
+    
+    def simulation(self, child_node_id):
+        '''
+        simulate game from child node's state until it reaches the resulting state of the game.
+        in:
+        - child node id (randomly selected child node id from `expansion`)
+        out:
+        - winner ('o', 'x', 'draw')
+        '''
+        self.total_n += 1
+        state = deepcopy(self.tree[child_node_id]['state'])
+        previous_player = deepcopy(self.tree[child_node_id]['player'])
+        anybody_win = False
 
-    def simulate(self):
-        pass
+        while not anybody_win:
+            winner = self._is_terminal(state)
+            if winner is not None:
+                # print('state')
+                # print(state)
+                # import matplotlib.pyplot as plt
+                # plt.figure(figsize=(4.5,4.56))
+                # plt.pcolormesh(state, alpha=0.6, cmap='RdBu_r')
+                # plt.grid()
+                # plt.axis('equal')
+                # plt.gca().invert_yaxis()
+                # plt.colorbar()
+                # plt.title('winner = ' + winner + ' (o:1, x:-1)')
+                # plt.show()
+                anybody_win = True
+            else:
+                possible_actions = self._get_valid_actions(state)
+                # randomly choose action for simulation (= random rollout policy)
+                rand_idx = np.random.randint(low=0, high=len(possible_actions), size=1)[0]
+                action, _ = possible_actions[rand_idx]
+
+                if previous_player == 'o':
+                    current_player = 'x'
+                    state[action] = -1
+                else:
+                    current_player = 'o'
+                    state[action] = 1
+
+                previous_player = current_player
+        return winner
+
 
     def bacpropagation(self):
         pass
