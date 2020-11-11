@@ -235,5 +235,35 @@ class MCTS(onbject):
         return winner
 
 
-    def bacpropagation(self):
-        pass
+    def backpropagation(self, child_node_id, winner):
+        '''
+        Here we update weights
+        of all the nodes by changing 
+        values of n and w 
+        '''
+
+        player = deepcopy(self.tree[(0,)]['player'])
+
+        if winner == 'draw':
+            reward = 0
+        elif winner == player:
+            reward = 1
+        else:
+            reward = -1
+
+        finish_back = False
+        node_id = child_node_id
+
+        while not finish_back:
+            self.tree[node_id]['n'] += 1
+            self.tree[node_id]['w'] += reward
+            self.tree[node_id]['q'] += self.tree[node_id]['w'] / self.tree[node_id]['n']
+            parent_id = self.tree[node_id]['parent']
+
+            if parent_id == (0,):
+                self.tree[parent_id]['n'] += 1
+                self.tree[node_id]['w'] += reward
+                self.tree[node_id]['q'] += self.tree[node_id]['w'] / self.tree[node_id]['n']
+                finish_back = True
+            else:
+                node_id = parent_id
