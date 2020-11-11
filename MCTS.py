@@ -205,17 +205,17 @@ class MCTS(onbject):
             if winner is not None:
                 # print('state')
                 # print(state)
-                # from here
-                import matplotlib.pyplot as plt
-                plt.figure(figsize=(4.5,4.56))
-                plt.pcolormesh(state, alpha=0.6, cmap='RdBu_r')
-                plt.grid()
-                plt.axis('equal')
-                plt.gca().invert_yaxis()
-                plt.colorbar()
-                plt.title('winner = ' + winner + ' (o:1, x:-1)')
-                plt.show()
-                #to here
+           
+#                 import matplotlib.pyplot as plt
+#                 plt.figure(figsize=(4.5,4.56))
+#                 plt.pcolormesh(state, alpha=0.6, cmap='RdBu_r')
+#                 plt.grid()
+#                 plt.axis('equal')
+#                 plt.gca().invert_yaxis()
+#                 plt.colorbar()
+#                 plt.title('winner = ' + winner + ' (o:1, x:-1)')
+#                 plt.show()
+                
                 anybody_win = True
             else:
                 possible_actions = self._get_valid_actions(state)
