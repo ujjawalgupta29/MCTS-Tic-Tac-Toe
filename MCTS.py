@@ -267,3 +267,55 @@ class MCTS(onbject):
                 finish_back = True
             else:
                 node_id = parent_id
+
+    
+    def solve(self):
+        for i in range(self.n_iterations):
+            leaf_node_id, depth_searched = self.selection()
+            child_node_id = self.expansion(leaf_node_id)
+            winner = self.simulation(child_node_id)
+            self.backpropagation(child_node_id, winner)
+
+        
+        #After training now we select best action at each step
+        current_state_node_id = (0,)
+        action_candidates = self.tree[current_state_node_id]['child']
+
+        best_q = -100
+        for a in action_candidates:
+            q = self.tree[(0,) + (a,)]['q']
+            if q > best_q:
+                best_q = q
+                best_action = a
+
+        # FOR DEBUGGING
+        print('\n----------------------')
+        print(' [-] game board: ')
+        for row in self.tree[(0,)]['state']:
+            print (row)
+        print(' [-] person to play: ', self.tree[(0,)]['player'])
+        print('\n [-] best_action: %d' % best_action)
+        print(' best_q = %.2f' % (best_q))
+        print(' [-] searching depth = %d' % (depth_searched))
+
+        #Visualization
+        fig = plt.figure(figsize=(5,5))
+        for a in action_candidates:
+            _node = self.tree[(0,)+(a,)]
+            _state = deepcopy(_node['state'])
+
+            _q = _node['q']
+            _action_onehot = np.zeros(len(_state)**2)
+
+            plt.subplot(len(_state),len(_state),a+1)
+            plt.pcolormesh(_state, alpha=0.7, cmap="RdBu")
+            plt.axis('equal')
+            plt.gca().invert_yaxis()
+            plt.xticks([], [])
+            plt.yticks([], [])
+            plt.title('[%d] q=%.2f' % (a,_q))
+
+        plt.draw()
+        plt.waitforbuttonpress(0)
+        plt.close(fig)
+
