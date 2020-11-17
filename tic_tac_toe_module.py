@@ -7,8 +7,41 @@ import numpy as np
 import copy
 
 #define window
+FPS = 30
+WINDOW_WIDTH = 340
+WINDOW_HEIGHT = 480
+TOP_MARGIN = 160
+MARGIN = 20
+GAMEBOARD_SIZE = 3
+WIN_MARK = 3
+GRID_SIZE = WINDOW_WIDTH - 2 * (MARGIN)
+
+HALF_WINDOW_WIDTH = int(WINDOW_WIDTH / 2)
+HALF_WINDOW_HEIGHT = int(WINDOW_HEIGHT / 2)
 
 ##set colors
+WHITE        = (255, 255, 255)
+BLACK        = (  0,   0,   0)
+RED          = (200,  72,  72)
+LIGHT_ORANGE = (198, 108,  58)
+ORANGE       = (180, 122,  48)
+GREEN        = ( 72, 160,  72)
+BLUE         = ( 66,  72, 200)
+YELLOW       = (162, 162,  42)
+NAVY         = ( 75,   0, 130)
+PURPLE       = (143,   0, 255)
+BADUK        = (220, 179,  92)
+
+def ReturnName():
+    return 'tictactoe'
+
+
+def Return_Num_Action():
+    return GAMEBOARD_SIZE * GAMEBOARD_SIZE
+
+
+def Return_BoardParams():
+    return GAMEBOARD_SIZE, WIN_MARK
 
 class GameState:
     def __init__(self):
@@ -54,9 +87,18 @@ class GameState:
                 TOP_MARGIN + i * int(GRID_SIZE / (GAMEBOARD_SIZE)) + int(
                     GRID_SIZE / (GAMEBOARD_SIZE * 2)))
 
+    def step(self):
+        pass
+    
     def terminate(self):
          pygame.quit()
          sys.exit()
+
+    def draw_main_board(self):
+        pass
+
+    def title_msg(self):
+        pass
 
     def rule_msg(self):
         ruleSurf1 = BASIC_FONT.render('Win: O or X mark has to be 3 in a row',
@@ -171,6 +213,9 @@ class GameState:
 
         return 0
 
+    def display_win(self, win_index):
+        pass
+
 
 if __name__ == "__main__":
-    pass
+    main()
