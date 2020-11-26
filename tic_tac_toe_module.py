@@ -86,16 +86,146 @@ class GameState:
             self.Y_coord.append(
                 TOP_MARGIN + i * int(GRID_SIZE / (GAMEBOARD_SIZE)) + int(
                     GRID_SIZE / (GAMEBOARD_SIZE * 2)))
+    
+    def step(self, input_):  # Game loop
+        # Initial settings
+        if self.init == True:
+            self.num_mark = 0
 
-    def step(self):
-        pass
+            # No mark: 0, o: 1, x = -1
+            self.gameboard = np.zeros([GAMEBOARD_SIZE, GAMEBOARD_SIZE])
+
+            # If O wins
+            if self.win_index == 1:
+                # x plays first
+                self.turn = 1
+
+            # If X wins
+            if self.win_index == 2:
+                # O plays first
+                self.turn = 0
+
+            # Reset init
+            self.init = False
+
+        # Key settings
+        mouse_pos = 0
+        if np.all(input_) == 0 or self.turn == 0:
+            # If guide mode of O's turn
+            for event in pygame.event.get():  # event loop
+                if event.type == QUIT:
+                    self.terminate()
+
+                if pygame.mouse.get_pressed()[0]:
+                    mouse_pos = pygame.mouse.get_pos()
+
+        # Check mouse position and count
+        check_valid_pos = False
+        x_index = -1
+        y_index = -1
+
+        if mouse_pos != 0:
+            for i in range(len(self.X_coord)):
+                for j in range(len(self.Y_coord)):
+                    if (self.X_coord[i] - 30 < mouse_pos[0] < self.X_coord[
+                        i] + 30) and (self.Y_coord[j] - 30 < mouse_pos[1] <
+                                              self.Y_coord[j] + 30):
+                        check_valid_pos = True
+                        x_index = i
+                        y_index = j
+
+                        # If selected spot is already occupied, it is not valid move!
+                        if self.gameboard[y_index, x_index] == 1 or \
+                                        self.gameboard[y_index, x_index] == -1:
+                            check_valid_pos = False
+
+        # If vs mode and MCTS works
+        if np.any(input_) != 0:
+            action_index = np.argmax(input_)
+            y_index = int(action_index / 3)
+            x_index = action_index % 3
+            check_valid_pos = True
+
+        # Change the gameboard according to the stone's index
+        if check_valid_pos:
+            if self.turn == 0:
+                self.gameboard[y_index, x_index] = 1
+                self.turn = 1
+                self.num_mark += 1
+            else:
+                self.gameboard[y_index, x_index] = -1
+                self.turn = 0
+                self.num_mark += 1
+
+        # Fill background color
+        DISPLAYSURF.fill(BLACK)
+
+        # Draw board
+        self.draw_main_board()
+
+        # Display Information
+        self.title_msg()
+        self.rule_msg()
+        self.score_msg()
+
+        # Display who's turn
+        self.turn_msg()
+
+        pygame.display.update()
+
+        # Check_win 0: playing, 1: black win, 2: white win, 3: draw
+        self.win_index = self.check_win()
+        self.display_win(self.win_index)
+
+        return self.gameboard, check_valid_pos, self.win_index, self.turn
+
     
     def terminate(self):
          pygame.quit()
          sys.exit()
 
     def draw_main_board(self):
-        pass
+        # Main board size = 400 x 400
+        # Game board size = 320 x 320
+        # mainboard_rect = pygame.Rect(MARGIN, TOP_MARGIN, WINDOW_WIDTH - 2 * MARGIN, WINDOW_WIDTH - 2 * MARGIN)
+        # pygame.draw.rect(DISPLAYSURF, BADUK, mainboard_rect)
+
+        # Horizontal Lines
+        for i in range(GAMEBOARD_SIZE + 1):
+            pygame.draw.line(DISPLAYSURF, WHITE, (
+            MARGIN, TOP_MARGIN + i * int(GRID_SIZE / (GAMEBOARD_SIZE))), (
+                             WINDOW_WIDTH - (MARGIN), TOP_MARGIN + i * int(
+                                 GRID_SIZE / (GAMEBOARD_SIZE))), 1)
+
+        # Vertical Lines
+        for i in range(GAMEBOARD_SIZE + 1):
+            pygame.draw.line(DISPLAYSURF, WHITE, (
+            MARGIN + i * int(GRID_SIZE / (GAMEBOARD_SIZE)), TOP_MARGIN), (
+                             MARGIN + i * int(GRID_SIZE / (GAMEBOARD_SIZE)),
+                             TOP_MARGIN + GRID_SIZE), 1)
+
+        # Draw center circle
+        pygame.draw.circle(DISPLAYSURF, WHITE, (
+        MARGIN + 4 * int(GRID_SIZE / (GAMEBOARD_SIZE)),
+        TOP_MARGIN + 4 * int(GRID_SIZE / (GAMEBOARD_SIZE))), 5, 0)
+
+        # Draw marks
+        for i in range(self.gameboard.shape[0]):
+            for j in range(self.gameboard.shape[1]):
+                if self.gameboard[i, j] == 1:
+                    pygame.draw.circle(DISPLAYSURF, WHITE,
+                                       (self.X_coord[j], self.Y_coord[i]), 30,
+                                       0)
+
+                if self.gameboard[i, j] == -1:
+                    pygame.draw.line(DISPLAYSURF, WHITE, (
+                    self.X_coord[j] - 30, self.Y_coord[i] - 30), (
+                                     self.X_coord[j] + 30,
+                                     self.Y_coord[i] + 30), 10)
+                    pygame.draw.line(DISPLAYSURF, WHITE, (
+                    self.X_coord[j] - 30, self.Y_coord[i] + 30), (
+                                     self.X_coord[j] + 30,
+                                     self.Y_coord[i] - 30), 10)
 
     def title_msg(self):
         pass
