@@ -159,6 +159,8 @@ class MCTS(object):
         winner = self._is_terminal(leaf_state)
         possible_actions = self._get_valid_actions(leaf_state)
 
+        child_node_id = leaf_node_id
+
         if winner is None:
             childs = []
             for action_set in possible_actions:
@@ -319,3 +321,4 @@ class MCTS(object):
         plt.waitforbuttonpress(0)
         plt.close(fig)
 
+        return best_action, best_q, depth_searched
