@@ -228,8 +228,11 @@ class GameState:
                                      self.Y_coord[i] - 30), 10)
 
     def title_msg(self):
-        pass
-
+        titleSurf = TITLE_FONT.render('TicTacToe', True, WHITE)
+        titleRect = titleSurf.get_rect()
+        titleRect.topleft = (MARGIN, 10)
+        DISPLAYSURF.blit(titleSurf, titleRect)
+        
     def rule_msg(self):
         ruleSurf1 = BASIC_FONT.render('Win: O or X mark has to be 3 in a row',
                                       True, WHITE)
@@ -344,7 +347,53 @@ class GameState:
         return 0
 
     def display_win(self, win_index):
-        pass
+        wait_time = 1
+        self.init = False
+
+        # Black Win
+        if win_index == 1:
+            # Fill background color
+            DISPLAYSURF.fill(WHITE)
+
+            winSurf = GAMEOVER_FONT.render("O Win!", True, BLACK)
+            winRect = winSurf.get_rect()
+            winRect.midtop = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50)
+            DISPLAYSURF.blit(winSurf, winRect)
+            pygame.display.update()
+            time.sleep(wait_time)
+
+            self.init = True
+            self.o_win += 1
+
+        # White Win
+        if win_index == 2:
+            # Fill background color
+            DISPLAYSURF.fill(BLACK)
+
+            winSurf = GAMEOVER_FONT.render("X Win!", True, WHITE)
+            winRect = winSurf.get_rect()
+            winRect.midtop = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50)
+            DISPLAYSURF.blit(winSurf, winRect)
+            pygame.display.update()
+            time.sleep(wait_time)
+
+            self.init = True
+            self.x_win += 1
+
+        # Draw
+        if win_index == 3:
+            # Fill background color
+            DISPLAYSURF.fill(WHITE)
+
+            winSurf = GAMEOVER_FONT.render("DRAW!", True, BLACK)
+            winRect = winSurf.get_rect()
+            winRect.midtop = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50)
+            DISPLAYSURF.blit(winSurf, winRect)
+            pygame.display.update()
+            time.sleep(wait_time)
+
+            self.init = True
+            self.count_draw += 1
 
 
 if __name__ == "__main__":
