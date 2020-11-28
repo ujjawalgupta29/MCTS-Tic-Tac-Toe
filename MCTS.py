@@ -7,7 +7,7 @@ class policy(object):
         self.tree = {}
         pass
 
-class MCTS(onbject):
+class MCTS(object):
     def __init__(self, n_iterations=50, depth=15, exploration_constant=5.0, tree = None, win_mark=3, game_board=None, player=None):
         self.n_iterations = n_iterations
         self.depth = depth
