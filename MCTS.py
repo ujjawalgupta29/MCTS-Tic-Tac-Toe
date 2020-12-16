@@ -284,6 +284,7 @@ class MCTS(object):
         action_candidates = self.tree[current_state_node_id]['child']
 
         best_q = -100
+        best_action = None
         for a in action_candidates:
             q = self.tree[(0,) + (a,)]['q']
             if q > best_q:
@@ -296,7 +297,7 @@ class MCTS(object):
         for row in self.tree[(0,)]['state']:
             print (row)
         print(' [-] person to play: ', self.tree[(0,)]['player'])
-        print('\n [-] best_action: %d' % best_action)
+        # print('\n [-] best_action: %d' % best_action)
         print(' best_q = %.2f' % (best_q))
         print(' [-] searching depth = %d' % (depth_searched))
 
